@@ -3,15 +3,15 @@
   hosts: all
   tasks:
 
-    - name: Install packages on test prod and balancer
+    - name: Install package on test prod and balancer
       ansible.builtin.dnf:
         name:
           - php
           - mariadb
         state: present
-      when: inventory_hostname in groups['test'] or inventory_hostname in groups['prod'] or inventory_hostname in groups['balancer']
+      when: inventory_hostname in groups['test'] or inventory_hostname in groups['test'] or inventory_hostname in groups['balancer']
 
-    - name: Install packages on dev
+    - name: Install package on dev
       ansible.builtin.dnf:
         name: '@RPM Development Tools'
         state: present
