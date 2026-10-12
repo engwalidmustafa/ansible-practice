@@ -1,0 +1,10 @@
+---
+- name: Play to collect host info
+  hosts: all
+  tasks:
+
+    - name: Use J2
+      ansible.builtin.template:
+        src: hostvars.j2
+        dest: /etc/myhosts
+      when: inventory_hostname in groups['dev']
