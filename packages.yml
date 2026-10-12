@@ -9,16 +9,19 @@
           - php
           - mariadb
         state: present
+        disable_gpg_check: true
       when: inventory_hostname in groups['test'] or inventory_hostname in groups['test'] or inventory_hostname in groups['balancer']
 
     - name: Install package on dev
       ansible.builtin.dnf:
         name: '@RPM Development Tools'
         state: present
+        disable_gpg_check: true
       when: inventory_hostname in groups['dev']
 
     - name: Update packages on dev
       ansible.builtin.dnf:
         name: "*"
         state: latest
+        disable_gpg_check: true
       when: inventory_hostname in groups['dev']
