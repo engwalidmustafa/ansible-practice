@@ -1,0 +1,48 @@
+---
+- name: Play to replace host info
+  hosts: all
+  vars:
+    hostname: "{{ansible_facts['hostname']}}"
+    mem_size: "{{ansible_facts['memtotal_mb']}}"
+    bios_version: "{{ansible_facts['bios_version']}}"
+    sda_size: "{{ansible_facts['devices']['sda']['size']|default('NONE')}}"
+    sdb_size: "{{ansible_facts['devices']['sdb']['size']|default('NONE')}}"
+  tasks:
+    
+    - name: Download hostinfo.txt to all hosts
+      #ansible.builtin.get_url:
+       # url: -------------
+       # dest: /root/hostinfo.txt
+      ansible.builtin.copy:
+        src: hostinfo.txt
+        dest: /root/hostinfo.txt
+
+    - name: Replace host name info
+      ansible.builtin.lineinfile:
+        path: /root/hostinfo.txt
+        regexp: '^HOST'
+        line: 'HOST={{hostname}}'
+
+    - name: Replace memory info
+      ansible.builtin.lineinfile:
+        path: /root/hostinfo.txt
+        regexp: '^MEM'
+        line: 'MEM={{mem_size}}'
+
+    - name: Replace bios version info
+      ansible.builtin.lineinfile:
+        path: /root/hostinfo.txt
+        regexp: '^BIOS'
+        line: 'BIOS={{bios_version}}'
+
+    - name: Replace sda info
+      ansible.builtin.lineinfile:
+        path: /root/hostinfo.txt
+        regexp: '^SDA'
+        line: 'SDA={{sda_size}}'
+
+    - name: Replace host sdb info
+      ansible.builtin.lineinfile:
+        path: /root/hostinfo.txt
+        regexp: '^SDB'
+        line: 'SDB={{sdb_size}}'

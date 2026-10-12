@@ -1,1 +1,15 @@
+[dev]
 servera
+
+[test]
+serverb
+
+[balancer]
+serverc
+
+[prod]
+centos
+serverd
+
+[webservers:children]
+prod

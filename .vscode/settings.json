@@ -1,0 +1,5 @@
+{
+    "ansible.executionEnvironment.enabled": true,
+    "ansible.executionEnvironment.image": "utility.lab.example.com:5000/ansible-automation-platform-25/ee-supported-rhel8:latest",
+    "ansible.executionEnvironment.pull.arguments": "--tls-verify=false"
+}

@@ -1,0 +1,24 @@
+---
+- name: Play to install packages
+  hosts: all
+  tasks:
+
+    - name: Install packages on test prod and balancer
+      ansible.builtin.dnf:
+        name:
+          - php
+          - mariadb
+        state: present
+      when: inventory_hostname in groups['test'] or inventory_hostname in groups['prod'] or inventory_hostname in groups['balancer']
+
+    - name: Install packages on dev
+      ansible.builtin.dnf:
+        name: '@RPM Development Tools'
+        state: present
+      when: inventory_hostname in groups['dev']
+
+    - name: Update packages on dev
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+      when: inventory_hostname in groups['dev']

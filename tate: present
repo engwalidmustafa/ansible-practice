@@ -1,0 +1,241 @@
+> COMMUNITY.GENERAL.PARTED    (/home/student/ansible/intro-devenv/mycollections/ansible_collections/community/general/plugins/modules/parted.py)
+
+        This module allows configuring block device partition using the `parted' command
+        line tool. For a full description of the fields and the options check the GNU parted
+        manual.
+
+OPTIONS (= is mandatory):
+
+- align
+        Set alignment for newly created partitions. Use `undefined' for parted default
+        alignment.
+        choices: [cylinder, minimal, none, optimal, undefined]
+        default: optimal
+        type: str
+
+= device
+        The block device (disk) where to operate.
+        Regular files can also be partitioned, but it is recommended to create a loopback
+        device using `losetup' to easily access its partitions.
+        type: str
+
+- flags
+        A list of the flags that has to be set on the partition.
+        default: null
+        elements: str
+        type: list
+
+- fs_type
+        If specified and the partition does not exist, will set filesystem type to given
+        partition.
+        Parameter optional, but see notes below about negative `part_start' values.
+        default: null
+        type: str
+        added in: version 0.2.0 of community.general
+
+
+- label
+        Disk label type or partition table to use.
+        If `device' already contains a different label, it will be changed to `label' and
+        any previous partitions will be lost.
+        A `name' must be specified for a `gpt' partition table.
+        choices: [aix, amiga, bsd, dvh, gpt, loop, mac, msdos, pc98, sun]
+        default: msdos
+        type: str
+
+- name
+        Sets the name for the partition number (GPT, Mac, MIPS and PC98 only).
+        default: null
+        type: str
+
+- number
+        The partition number being affected.
+        Required when performing any action on the disk, except fetching information.
+        default: null
+        type: int
+
+- part_end
+        Where the partition will end as offset from the beginning of the disk, that is, the
+        "distance" from the start of the disk. Negative numbers specify distance from the
+        end of the disk.
+        The distance can be specified with all the units supported by parted (except compat)
+        and it is case sensitive, for example `10GiB', `15%'.
+        default: 100%
+        type: str
+
+- part_start
+        Where the partition will start as offset from the beginning of the disk, that is,
+        the "distance" from the start of the disk. Negative numbers specify distance from
+        the end of the disk.
+        The distance can be specified with all the units supported by parted (except compat)
+        and it is case sensitive, for example `10GiB', `15%'.
+        Using negative values may require setting of `fs_type' (see notes).
+        default: 0%
+        type: str
+
+- part_type
+        May be specified only with `label=msdos' or `label=dvh'.
+        Neither `part_type' nor `name' may be used with `label=sun'.
+        choices: [extended, logical, primary]
+        default: primary
+        type: str
+
+- resize
+        Call `resizepart' on existing partitions to match the size specified by `part_end'.
+        default: false
+        type: bool
+        added in: version 1.3.0 of community.general
+
+
+- state
+        Whether to create or delete a partition.
+        If set to `info' the module will only return the device information.
+        choices: [absent, present, info]
+        default: info
+        type: str
+
+- unit
+        Selects the current default unit that Parted will use to display locations and
+        capacities on the disk and to interpret those given by the user if they are not
+        suffixed by an unit.
+        When fetching information about a disk, it is recommended to always specify a unit.
+        choices: [s, B, KB, KiB, MB, MiB, GB, GiB, TB, TiB, '%', cyl, chs, compact]
+        default: KiB
+        type: str
+
+
+ATTRIBUTES:
+
+        check_mode:
+          description: Can run in `check_mode' and return changed status prediction without
+            modifying target.
+          support: full
+        diff_mode:
+          description: Will return details on what has changed (or possibly needs changing
+            in `check_mode'), when in diff mode.
+          support: none
+
+NOTES:
+      * When fetching information about a new disk and when the version of parted
+        installed on the system is before version 3.1, the module queries the kernel
+        through `/sys/' to obtain disk information. In this case the units CHS and CYL
+        are not supported.
+      * Negative `part_start' start values were rejected if `fs_type' was not given.
+        This bug was fixed in parted 3.2.153. If you want to use negative
+        `part_start', specify `fs_type' as well or make sure your system contains
+        newer parted.
+
+
+REQUIREMENTS:  This module requires `parted' version 1.8.3 and above., Option `align'
+        (except `undefined') requires `parted' 2.1 or above., If the version
+        of `parted' is below 3.1, it requires a Linux version running the
+        `sysfs' file system `/sys/'., Requires the `resizepart' command when
+        using the `resize' parameter.
+
+AUTHOR: Fabrizio Colonna (@ColOfAbRiX)
+
+EXAMPLES:
+
+- name: Create a new ext4 primary partition
+  community.general.parted:
+    device: /dev/sdb
+    number: 1
+    state: present
+    fs_type: ext4
+
+- name: Remove partition number 1
+  community.general.parted:
+    device: /dev/sdb
+    number: 1
+    state: absent
+
+- name: Create a new primary partition with a size of 1GiB
+  community.general.parted:
+    device: /dev/sdb
+    number: 1
+    state: present
+    part_end: 1GiB
+
+- name: Create a new primary partition for LVM
+  community.general.parted:
+    device: /dev/sdb
+    number: 2
+    flags: [ lvm ]
+    state: present
+    part_start: 1GiB
+
+- name: Create a new primary partition with a size of 1GiB at disk's end
+  community.general.parted:
+    device: /dev/sdb
+    number: 3
+    state: present
+    fs_type: ext3
+    part_start: -1GiB
+
+# Example on how to read info and reuse it in subsequent task
+- name: Read device information (always use unit when probing)
+  community.general.parted: device=/dev/sdb unit=MiB
+  register: sdb_info
+
+- name: Remove all partitions from disk
+  community.general.parted:
+    device: /dev/sdb
+    number: '{{ item.num }}'
+    state: absent
+  loop: '{{ sdb_info.partitions }}'
+
+- name: Extend an existing partition to fill all available space
+  community.general.parted:
+    device: /dev/sdb
+    number: "{{ sdb_info.partitions | length }}"
+    part_end: "100%"
+    resize: true
+    state: present
+
+
+RETURN VALUES:
+- partition_info
+        Current partition information
+        returned: success
+        sample:
+          disk:
+            dev: /dev/sdb
+            logical_block: 512
+            model: VMware Virtual disk
+            physical_block: 512
+            size: 5.0
+            table: msdos
+            unit: gib
+          partitions:
+          - begin: 0.0
+            end: 1.0
+            flags:
+            - boot
+            - lvm
+            fstype: ''
+            name: ''
+            num: 1
+            size: 1.0
+          - begin: 1.0
+            end: 5.0
+            flags: []
+            fstype: ''
+            name: ''
+            num: 2
+            size: 4.0
+          script: 'unit KiB print '
+        type: complex
+
+        CONTAINS:
+
+        - disk
+            Generic device information.
+            type: dict
+
+        - partitions
+            List of device partitions.
+            type: list
+
+        - script
+            parted script executed by module
+            type: str

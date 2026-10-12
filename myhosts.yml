@@ -1,0 +1,10 @@
+---
+- name: Play to use template
+  hosts: all
+  tasks:
+
+    - name: Use j2 template
+      ansible.builtin.template:
+        src: hostvars.j2
+        dest: /etc/myhosts
+      when: inventory_hostname in groups['dev']

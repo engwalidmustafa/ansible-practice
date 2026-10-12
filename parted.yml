@@ -1,0 +1,41 @@
+---
+- name: Play to use parted
+  hosts: balancer
+  tasks:
+    
+    - name: Create linux directory
+      ansible.builtin.file:
+        path: /mnt/walid
+        state: directory
+
+#    - name: Create partition
+ #     community.general.parted:
+  #      device: /dev/sda
+   #     number: 7
+    #    label: gpt
+     #   state: present
+      #  part_end: 1500MiB
+
+    - name: Create volum group
+      community.general.lvg:
+        vg: research
+        pvs: /dev/sda7
+
+    - name: Create lv
+      community.general.lvol:
+        vg: research
+        lv: data
+        size: '1400'
+
+    - name: Create filesystem
+      ansible.builtin.filesystem:
+        fstype: ext4
+        dev: /dev/research/data
+
+    - name: Mount filesystem
+      ansible.posix.mount:
+        path: /mnt/walid
+        src: /dev/research/data
+        fstype: ext4
+        state: mounted
+

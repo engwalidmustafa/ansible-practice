@@ -1,0 +1,20 @@
+---
+- name: Play to create vgs
+  hosts: all
+  tasks:
+
+    - name: Create partition
+      community.general.parted:
+        device: /dev/sda
+        number: 7
+        state: present
+        part_end: 1500MiB
+      when: inventory_hostname == "servera"
+
+    - name: Create vg on serverd
+      community.general.lvg:
+        vg: exam
+        pvs: /dev/sda1
+        state: present
+      when: inventory_hostname == "servera"
+

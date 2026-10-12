@@ -1,0 +1,6 @@
+#Host Information
+HOST=hostname
+MEMSIZE=total memory size
+BIOS_VERSION=bios version
+SDASIZE=disksize
+SDBSIZE=disksize
