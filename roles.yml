@@ -3,13 +3,12 @@
   hosts: all
   tasks:
 
-    - name: Deploy balancer role
+    - name: Deploy role on balancer group
       ansible.builtin.include_role:
         name: balancer
       when: inventory_hostname in groups['balancer']
 
-    - name: Deploy phpinfo role
+    - name: Deploy role on dev group
       ansible.builtin.include_role:
         name: phpinfo
       when: inventory_hostname in groups['dev']
-

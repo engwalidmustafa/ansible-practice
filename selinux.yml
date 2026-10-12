@@ -1,26 +1,26 @@
 ---
-- name: Play to manage SELinux
-  hosts: dev
+- name: Manage SELinux policy example
+  hosts: serverc
   vars:
     selinux_policy: targeted
     selinux_state: enforcing
   tasks:
 
-    - name: Deploy roles and rescue in block
+    - name: Execute the role and reboot in a rescue block
       block:
-      - name: Deploy role
-        ansible.builtin.include_role:
-          name: rhel-system-roles.selinux
+        - name: Include selinux role
+          include_role:
+            name: rhel-system-roles.selinux
       rescue:
-      - name: Reboot system for reason other than required
-        ansible.builtin.fail:
-          msg: 'role failed'
-        when: not selinux_reboot_required
+        - name: >-
+            Fail if failed for a different reason than selinux_reboot_required
+          fail:
+            msg: "role failed"
+          when: not selinux_reboot_required
 
-    - name: Reboot system
-      ansible.builtin.reboot:
+        - name: Restart managed host
+          reboot:
 
-    - name: Reapply role
-      ansible.builtin.include_role:
-        name: rhel-system-roles.selinux
-            
+        - name: Reapply the role
+          include_role:
+            name: rhel-system-roles.selinux

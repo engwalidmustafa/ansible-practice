@@ -13,9 +13,9 @@
     enabled: true
   loop: "{{services}}"
 
-- name: Allow http
+- name: Allow firewall
   ansible.posix.firewalld:
-    service: http
+    service: "{{rule}}"
     state: enabled
     immediate: true
     permanent: true

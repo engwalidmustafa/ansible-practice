@@ -1,48 +1,34 @@
 ---
-- name: Play to create multiple lvm
+- name: Play to create lvm
   hosts: all
   tasks:
 
-    - name: Display message
-      ansible.builtin.debug:
-        msg: "Disk group is not available on {{ansible_hostname}}"
-      when: ansible_lvm.vgs.research is not defined
+    - name: Use block and rescue to create lvm
+      block:
+      - name: Display message
+        ansible.builtin.debug:
+          msg: "Disk group is not available on {{ansible_hostname}}"
+        when: ansible_lvm.vgs.research is not defined
 
-    - name: Create 1500mb lvm
-      community.general.lvol:
-        vg: research
-        lv: data
-        size: '1500'
-      when: ansible_lvm.vgs.research.size_g > '1.5'
+      - name: Create 1500mb lvm
+        community.general.lvol:
+          vg: research
+          lv: data
+          size: '1500'
 
-    - name: Display message 2
-      ansible.builtin.debug:
-        msg: "Sufficient space is not available on {{ansible_hostname}}"
-      when: ansible_lvm.vgs.research.size_g < '1.5'
+      rescue:
+      - name: Display message
+        ansible.builtin.debug:
+          msg: "Sufficient space is not available on {{ansible_hostname}}"
 
-    - name: Create 800mb lvm
-      community.general.lvol:
-        vg: research
-        lv: data
-        size: '800'
-      when: ansible_lvm.vgs.research.size_g < '1.5'
+      - name: Create 800mb lvm
+        community.general.lvol:
+          vg: research
+          lv: data
+          size: '800'
 
-    - name: Display message 3
-      ansible.builtin.debug:
-        msg: "Sufficient space is not available on {{ansible_hostname}}"
-      when: ansible_lvm.vgs.research.size_g < '0.8'
-
-    - name: Create file system
-      community.general.filesystem:
-        fstype: ext4
-        device: /dev/research/data
-      when: ansible_lvm.vgs.research is defined
-
-    - name: Mounting file system
-      ansible.posix.mount:
-        path: /mnt/walid
-        src: /dev/research/data
-        fstype: ext4
-        state: mounted
-
-
+      - name: Create file system
+        community.general.filesystem:
+          fstype: ext4
+          dev: /dev/research/data
+        when: ansible_lvm.vgs.research is defined

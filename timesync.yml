@@ -2,12 +2,12 @@
 - name: Example with single pool
   hosts: all
   vars:
-    timesync_ntp_servers:
+    timesync_ntp_server:
       - hostname: 192.168.1.55
         iburst: true
     timesync_ntp_provider: chrony
   tasks:
-    - name: Configure ntp client on test
+    
+    - name: Deploy timesync role
       ansible.builtin.include_role:
         name: rhel-system-roles.timesync
-      when: inventory_hostname in groups['test']

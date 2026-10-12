@@ -1,5 +1,5 @@
 ---
-- name: Play to use apache role
+- name: Play to deploy role
   hosts: webservers
   tasks:
 

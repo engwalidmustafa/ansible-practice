@@ -8,8 +8,9 @@ serverb
 serverc
 
 [prod]
-centos
 serverd
+centos
 
 [webservers:children]
 prod
+

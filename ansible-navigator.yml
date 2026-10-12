@@ -7,7 +7,7 @@ ansible-navigator:
     pull:
       policy: missing
       arguments:
-        - "--tls-verify=false"
+         - "--tls-verify=false"
   playbook-artifact:
     enable: false
   mode: stdout
