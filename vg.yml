@@ -1,9 +1,0 @@
----
-- name: Create vg
-  hosts: dev
-  tasks:
-
-    - name: Create 1500mb 
-      community.general.lvg:
-        vg: research
-        pvs: /dev/sda7

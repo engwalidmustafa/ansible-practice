@@ -12,3 +12,4 @@
       ansible.builtin.include_role:
         name: phpinfo
       when: inventory_hostname in groups['dev']
+

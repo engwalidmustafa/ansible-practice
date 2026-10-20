@@ -3,25 +3,22 @@
   hosts: all
   tasks:
 
-    - name: Install package on test prod and balancer
+    - name: Install packages on test prod and balancer
       ansible.builtin.dnf:
         name:
           - php
           - mariadb
         state: present
-        disable_gpg_check: true
-      when: inventory_hostname in groups['test'] or inventory_hostname in groups['test'] or inventory_hostname in groups['balancer']
-
-    - name: Install package on dev
+      when: inventory_hostname in groups['test'] or inventory_hostname in groups['prod'] or inventory_hostname in groups['balancer']
+    
+    - name: Install packages on dev
       ansible.builtin.dnf:
         name: '@RPM Development Tools'
         state: present
-        disable_gpg_check: true
       when: inventory_hostname in groups['dev']
-
+    
     - name: Update packages on dev
       ansible.builtin.dnf:
         name: "*"
         state: latest
-        disable_gpg_check: true
       when: inventory_hostname in groups['dev']

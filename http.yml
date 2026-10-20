@@ -1,0 +1,8 @@
+---
+- name: Play to include role
+  hosts: webservers
+  tasks:
+    
+    - name: Deploy apache role
+      ansible.builtin.include_role:
+        name: apache

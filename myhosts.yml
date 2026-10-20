@@ -1,9 +1,9 @@
 ---
-- name: Play to collect host info
+- name: Play to create content
   hosts: all
   tasks:
-
-    - name: Use J2
+    
+    - name: Create content using j2 template
       ansible.builtin.template:
         src: hostvars.j2
         dest: /etc/myhosts

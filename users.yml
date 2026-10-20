@@ -1,9 +1,9 @@
 ---
-- name: Play to create users accordingly
+- name: Play to create users accordiglly
   hosts: all
   vars_files:
-    - secret.yml
     - users_list.txt
+    - secret.yml
   tasks:
 
     - name: Create groups
@@ -17,23 +17,17 @@
     - name: Create users on prod and test
       ansible.builtin.user:
         name: "{{item.name}}"
-        comment: "{{item.job}}"
-        state: present
+        comment: "item.job}}"
         group: manager
         password: "{{pwhash1|password_hash('sha512')}}"
-        password_expire_max: 99999
-        password_expire_min: 0
       loop: "{{users}}"
       when: (inventory_hostname in groups['prod'] and item.job == 'developer') or (inventory_hostname in groups['test'] and item.job == 'developer')
-
+   
     - name: Create users on dev
       ansible.builtin.user:
         name: "{{item.name}}"
-        comment: "{{item.job}}"
-        state: present
+        comment: "item.job}}"
         group: devops
         password: "{{pwhash2|password_hash('sha512')}}"
-        password_expire_max: 99999
-        password_expire_min: 0
       loop: "{{users}}"
-      when: inventory_hostname in groups['prod'] and item.job == 'devops'
+      when: inventory_hostname in groups['dev'] and item.job == 'devops'

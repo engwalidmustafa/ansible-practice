@@ -1,21 +1,21 @@
 ---
-- name: Play to change content of file
+- name: Play to mdify content
   hosts: all
   tasks:
 
-    - name: Modify prod host
+    - name: Modify on prod
       ansible.builtin.copy:
         content: '"Production"'
         dest: /etc/issue
       when: inventory_hostname in groups['prod']
 
-    - name: Modify dev host
+    - name: Modify dev
       ansible.builtin.copy:
         content: '"Development"'
         dest: /etc/issue
       when: inventory_hostname in groups['dev']
 
-    - name: Modify balancer host
+    - name: Modify on balancer
       ansible.builtin.copy:
         content: '"Balancer"'
         dest: /etc/issue

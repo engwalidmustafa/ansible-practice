@@ -3,32 +3,30 @@
   hosts: all
   tasks:
 
-    - name: Use block and rescue to create lvm
+    - name: Create lvm in block and rescue
       block:
       - name: Display message
         ansible.builtin.debug:
           msg: "Disk group is not available on {{ansible_hostname}}"
         when: ansible_lvm.vgs.research is not defined
-
-      - name: Create 1500mb lvm
+      - name: Create 1500MB lvm
         community.general.lvol:
           vg: research
           lv: data
           size: '1500'
-
       rescue:
       - name: Display message
         ansible.builtin.debug:
           msg: "Sufficient space is not available on {{ansible_hostname}}"
-
-      - name: Create 800mb lvm
+      - name: Create 800MB lv
         community.general.lvol:
           vg: research
           lv: data
           size: '800'
 
-      - name: Create file system
-        community.general.filesystem:
-          fstype: ext4
-          dev: /dev/research/data
-        when: ansible_lvm.vgs.research is defined
+    - name: Create filesystem
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/research/data
+      when: ansible_lvm.vgs.research is defined
+

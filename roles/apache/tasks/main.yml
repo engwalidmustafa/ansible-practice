@@ -13,9 +13,9 @@
     enabled: true
   loop: "{{services}}"
 
-- name: Allow firewall
+- name: Allow http
   ansible.posix.firewalld:
-    service: "{{rule}}"
+    service: http
     state: enabled
     immediate: true
     permanent: true
@@ -24,4 +24,3 @@
   ansible.builtin.template:
     src: index.html.j2
     dest: /var/www/html/index.html
-    setype: httpd_sys_content_t

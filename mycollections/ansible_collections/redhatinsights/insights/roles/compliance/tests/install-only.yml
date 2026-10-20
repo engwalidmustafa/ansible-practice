@@ -1,8 +1,0 @@
----
-- name: Install-only test of compliance role
-  hosts: all
-  tasks:
-    - name: Install Insights compliance
-      ansible.builtin.import_role:
-        name: redhatinsights.insights.compliance
-        tasks_from: install

@@ -1,7 +1,0 @@
----
-- name: Simple test of compliance role
-  hosts: all
-  tasks:
-    - name: Insights compliance
-      ansible.builtin.import_role:
-        name: redhatinsights.insights.compliance

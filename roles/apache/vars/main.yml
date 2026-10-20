@@ -1,9 +1,9 @@
 ---
 # vars file for roles/apache
 packages:
-  - httpd
-  - firewalld
+- httpd
+- firewalld
 services:
-  - httpd
-  - firewalld
+- httpd
+- firewalld
 rule: http

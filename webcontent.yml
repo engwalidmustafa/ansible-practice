@@ -3,12 +3,12 @@
   hosts: webservers
   tasks:
 
-    - name: Create linux group
+    - name: Create devops group
       ansible.builtin.group:
         name: devops
         state: present
 
-    - name: Create linux directory
+    - name: Create directory
       ansible.builtin.file:
         path: /webdev
         state: directory
@@ -17,7 +17,7 @@
         mode: '02775'
         setype: httpd_sys_content_t
 
-    - name: Create index html file
+    - name: Create index
       ansible.builtin.copy:
         content: "Development"
         dest: /webdev/index.html
@@ -25,7 +25,7 @@
 
     - name: Create link
       ansible.builtin.file:
-        src: /webdev
+        src: /webdev/index.html
         dest: /var/www/html/webdev
         state: link
         force: true
@@ -39,7 +39,7 @@
         - httpd
         - firewalld
 
-    - name: Start service
+    - name: Start services
       ansible.builtin.service:
         name: "{{item}}"
         state: started
@@ -48,9 +48,9 @@
         - httpd
         - firewalld
 
-    - name: Allow firewall
+    - name: Allow http
       ansible.posix.firewalld:
         service: http
         state: enabled
-        immediate: true
         permanent: true
+        immediate: true

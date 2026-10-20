@@ -1,0 +1,22 @@
+---
+- name: Play to crate cron job
+  hosts: all
+  tasks:
+    
+    - name: Create user natasha
+      ansible.builtin.user:
+        name: natasha
+        state: present
+      when: inventory_hostname in groups['test']
+
+    - name: Create cron job for natasha
+      ansible.builtin.cron:
+        name: "example cron"
+        state: present
+        user: natasha
+        minute: "*/3"
+        hour: "*"
+        day: "*"
+        month: "*"
+        job: 'logger "heloo how are you"'
+      when: inventory_hostname in groups['test']

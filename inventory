@@ -9,7 +9,10 @@ serverc
 
 [prod]
 serverd
-centos
+servere
+
+[centos]
+servercentos
 
 [webservers:children]
 prod
