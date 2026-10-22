@@ -1,0 +1,22 @@
+---
+- name: Play to add content
+  hosts: all
+  tasks:
+
+    - name: Add content to prod
+      ansible.builtin.copy:
+        content: '"Production"'
+        dest: /etc/issue
+      when: inventory_hostname in groups['prod']
+
+    - name: Add content to dev
+      ansible.builtin.copy:
+        content: '"Development"'
+        dest: /etc/issue
+      when: inventory_hostname in groups['dev']
+
+    - name: Add content to balancer
+      ansible.builtin.copy:
+        content: '"Balancer"'
+        dest: /etc/issue
+      when: inventory_hostname in groups['balancer']
