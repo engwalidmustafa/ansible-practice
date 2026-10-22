@@ -16,8 +16,8 @@
         name: '@RPM Development Tools'
         state: present
       when: inventory_hostname in groups['dev']
-    
-    - name: Update packages on dev
+
+    - name: Updates packages on dev
       ansible.builtin.dnf:
         name: "*"
         state: latest
