@@ -1,0 +1,37 @@
+---
+- name: Play to create partion and vg
+  hosts: centos
+  tasks:
+
+    - name: Create partion
+      community.general.parted:
+        device: /dev/sdb
+        number: 1
+        part_end: 2GiB
+        state: present
+
+    - name: Create vg
+      community.general.lvg:
+        vg: hyd
+        pvs: /dev/sdb1
+        state: present
+
+    - name: Create lv
+      community.general.lvol:
+        vg: hyd
+        lv: ap
+        size: '1000'
+        state: present
+
+    - name: Create filesystem
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/hyd/ap
+        state: present
+
+    - name: Extend hyd
+      community.general.lvol:
+        vg: hyd
+        lv: ap
+        size: '1500'
+        resizefs: true
