@@ -1,0 +1,13 @@
+---
+- name: Play to create partion and vg
+  hosts: centos
+  tasks:
+
+
+    - name: Shrink hyd
+      community.general.lvol:
+        vg: hyd
+        lv: ap
+        size: '600'
+        force: true
+        resizefs: true
