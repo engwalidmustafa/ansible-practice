@@ -1,6 +1,6 @@
 ---
 - name: Manage SELinux policy example
-  hosts: dev
+  hosts: all
   vars:
     selinux_policy: targeted
     selinux_state: enforcing
