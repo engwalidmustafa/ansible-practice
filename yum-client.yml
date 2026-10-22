@@ -10,11 +10,22 @@
         baseurl: http://-------------
         enabled: false
         gpgcheck: false
+        gpgkey: http://--------------
     
-    - name: Create AppStream Repo
+    - name: AppStream Repo
       ansible.builtin.yum_repository:
         name: RHEL10_APPSTREAM
         description: AppStream Repo for RHEL 10
         baseurl: http://-------------
         enabled: false
         gpgcheck: false
+        gpgkey: http://--------------
+
+    - name: Create Extras Repo
+      ansible.builtin.yum_repository:
+        name: RHEL10_EXTREAS
+        description: Extras Repo for RHEL 10
+        baseurl: http://-------------
+        enabled: false
+        gpgcheck: false
+        gpgkey: http://--------------
