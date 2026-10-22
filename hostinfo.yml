@@ -1,5 +1,5 @@
 ---
-- name: Play to collect hostinfo
+- name: Play to collect host info
   hosts: all
   vars:
     hostname: "{{ansible_facts['hostname']}}"
@@ -9,46 +9,39 @@
     sdb_size: "{{ansible_facts['devices']['sdb']['size']|default('NONE')}}"
   tasks:
 
-   # - name: Download txt file to root
-    #  ansible.builtin.get_url:
-     #   url: http://-------------
-      #  dest: /root/hostinfo.txt
-    - name: Copy txt to root
+    - name: Copy txt to all hosts
+      #ansible.builtin.get_url
+      #url: http://-----------
+      #dest: /root/hostinfo.txt
       ansible.builtin.copy:
-        src : hostinfo.txt
+        src: hostinfo.txt
         dest: /root/hostinfo.txt
 
-    - name: Read hostname info
+    - name: Collect host name
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^HOST'
         line: 'HOST={{hostname}}'
 
-    - name: Read hostname info
-      ansible.builtin.lineinfile:
-        path: /root/hostinfo.txt
-        regexp: '^HOST'
-        line: 'HOST={{hostname}}'
-
-    - name: Read memory info
+    - name: Collect memory size
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^MEM'
-        line: 'HOST={{mem_size}}'
+        line: 'MEM={{mem_size}}'
 
-    - name: Read bios version info
+    - name: Collect bios version
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^BIOS'
         line: 'BIOS={{bios_version}}'
 
-    - name: Read sda size info
+    - name: Collect SDA
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^SDA'
         line: 'SDA={{sda_size}}'
 
-    - name: Read sdb size info
+    - name: Collect SDB
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^SDB'

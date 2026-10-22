@@ -2,31 +2,39 @@
 - name: Play to create lvm
   hosts: all
   tasks:
+    - block:
+      - block:
+        - name: Display message
+          ansible.builtin.debug:
+            msg: "Disk group is not available on {{ansible_hostname}}"
+          when: ansible_lvm.vgs.research is not defined
 
-    - name: Create lvm in block and rescue
-      block:
-      - name: Display message
-        ansible.builtin.debug:
-          msg: "Disk group is not available on {{ansible_hostname}}"
-        when: ansible_lvm.vgs.research is not defined
-      - name: Create 1500MB lvm
-        community.general.lvol:
-          vg: research
-          lv: data
-          size: '1500'
-      rescue:
-      - name: Display message
-        ansible.builtin.debug:
-          msg: "Sufficient space is not available on {{ansible_hostname}}"
-      - name: Create 800MB lv
-        community.general.lvol:
-          vg: research
-          lv: data
-          size: '800'
+      - block:
+        - name: Create 1500mb lvm
+          community.general.lvol:
+            vg: research
+            lv: data
+            size: '1500'
+            state: present
+          when: ansible_lvm.vgs.research.size_g > '1.5'
 
-    - name: Create filesystem
-      community.general.filesystem:
-        fstype: ext4
-        dev: /dev/research/data
-      when: ansible_lvm.vgs.research is defined
+      - block:
+        - name: Display message
+          ansible.builtin.debug:
+            msg: "Sufficient space is not available on {{ansible_hostname}}"
 
+        - name: Create 800mb lv
+          community.general.lvol:
+            vg: research
+            lv: data
+            size: '800'
+            state: present
+
+      - block:
+        - name: Create file system
+          community.general.filesystem:
+            fstype: ext4
+            dev: /dev/research/data
+          when: ansible_lvm.vgs.research is defined
+
+        
