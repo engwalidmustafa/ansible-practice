@@ -1,0 +1,14 @@
+---
+- name: Play to create cron job
+  hosts: test
+  tasks:
+
+    - name: Create cron job for user natasha
+      ansible.builtin.cron:
+        name: "cron job2"
+        user: natasha
+        minute: "*/5"
+        hour: "*"
+        day: "*"
+        month: "*"
+        job: 'logger "hello elian"'
