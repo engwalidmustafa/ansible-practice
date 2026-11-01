@@ -6,16 +6,16 @@
     state: present
   loop: "{{packages}}"
 
-- name: Start service
+- name: Start services
   ansible.builtin.service:
     name: "{{item}}"
     state: started
     enabled: true
   loop: "{{services}}"
 
-- name: ALLOW http
+- name: Allow http
   ansible.posix.firewalld:
-    service: http
+    service: "{{rule}}"
     state: enabled
     immediate: true
     permanent: true

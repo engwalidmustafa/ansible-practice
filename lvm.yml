@@ -1,40 +1,39 @@
 ---
-- name: Play to create lvm
+- name: Play to create multiple lvm
   hosts: all
+  ignore_errors: true
   tasks:
-    - block:
-      - block:
+
+   - block:
+     - block:
         - name: Display message
           ansible.builtin.debug:
             msg: "Disk group is not available on {{ansible_hostname}}"
           when: ansible_lvm.vgs.research is not defined
-
-      - block:
+        
         - name: Create 1500mb lvm
           community.general.lvol:
             vg: research
             lv: data
             size: '1500'
-            state: present
           when: ansible_lvm.vgs.research.size_g > '1.5'
 
-      - block:
+     - block:
         - name: Display message
           ansible.builtin.debug:
-            msg: "Sufficient space is not available on {{ansible_hostname}}"
-
-        - name: Create 800mb lv
+           msg: "Sufficient splace is not available on {{ansible_hostname}}"
+      
+        - name: Create 800mb lvm
           community.general.lvol:
             vg: research
             lv: data
             size: '800'
-            state: present
+          when: ansible_lvm.vgs.research.size_g < '1.5'
 
-      - block:
+     - block:
         - name: Create file system
           community.general.filesystem:
             fstype: ext4
             dev: /dev/research/data
           when: ansible_lvm.vgs.research is defined
 
-        

@@ -1,5 +1,5 @@
 ---
-- name: Play to create multiple Repo
+- name: Play to create multiple repository
   hosts: all
   tasks:
 
@@ -7,25 +7,16 @@
       ansible.builtin.yum_repository:
         name: RHEL10_BASEOS
         description: BaseOS Repo for RHEL 10
-        baseurl: http://-------------
+        baseurl: http://content.example.com/rhel10.0/x86_64/dvd/BaseOS
         enabled: false
         gpgcheck: false
-        gpgkey: http://--------------
+        gpgkey: http://------------------
     
-    - name: AppStream Repo
+    - name: Create AppStream Repo
       ansible.builtin.yum_repository:
         name: RHEL10_APPSTREAM
         description: AppStream Repo for RHEL 10
-        baseurl: http://-------------
+        baseurl: http://content.example.com/rhel10.0/x86_64/dvd/AppStream
         enabled: false
         gpgcheck: false
-        gpgkey: http://--------------
-
-    - name: Create Extras Repo
-      ansible.builtin.yum_repository:
-        name: RHEL10_EXTREAS
-        description: Extras Repo for RHEL 10
-        baseurl: http://-------------
-        enabled: false
-        gpgcheck: false
-        gpgkey: http://--------------
+        gpgkey: http://------------------

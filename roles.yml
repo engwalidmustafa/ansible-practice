@@ -1,15 +1,14 @@
 ---
-- name: Play to deploy roles
+- name: Play to depoly multiple roles
   hosts: all
   tasks:
 
-    - name: Deploy role on balancer group
+    - name: Deploy role on balancer
       ansible.builtin.include_role:
         name: balancer
-      when: inventory_hostname in groups['balancer']
+      when: ansible_hostname in groups['balancer']
 
-    - name: Deploy role on dev group
+    - name: Deploy role on dev
       ansible.builtin.include_role:
         name: phpinfo
-      when: inventory_hostname in groups['dev']
-
+      when: ansible_hostname in groups['dev']

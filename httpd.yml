@@ -1,9 +1,8 @@
 ---
-- name: Play to deploy apache role
-  hosts: all
+- name: Play to create deploy role
+  hosts: webservers
   tasks:
 
-    - name: Deploy include role
+    - name: deply apache role
       ansible.builtin.include_role:
         name: apache
-      when: inventory_hostname in groups['webservers']

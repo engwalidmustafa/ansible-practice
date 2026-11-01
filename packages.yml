@@ -9,16 +9,16 @@
           - php
           - mariadb
         state: present
-      when: inventory_hostname in groups['test'] or inventory_hostname in groups['prod'] or inventory_hostname in groups['balancer']
-    
+      when: ansible_hostname in groups['test'] or ansible_hostname in groups['prod'] or ansible_hostname in groups['balancer']
+
     - name: Install packages on dev
       ansible.builtin.dnf:
         name: '@RPM Development Tools'
         state: present
-      when: inventory_hostname in groups['dev']
+      when: ansible_hostname in groups['dev']
 
-    - name: Updates packages on dev
+    - name: Update packages on dev
       ansible.builtin.dnf:
         name: "*"
         state: latest
-      when: inventory_hostname in groups['dev']
+      when: ansible_hostname in groups['dev']

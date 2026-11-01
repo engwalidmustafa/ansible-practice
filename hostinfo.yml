@@ -9,39 +9,41 @@
     sdb_size: "{{ansible_facts['devices']['sdb']['size']|default('NONE')}}"
   tasks:
 
-    - name: Copy txt to all hosts
-      #ansible.builtin.get_url
-      #url: http://-----------
-      #dest: /root/hostinfo.txt
+   # - name: Download the txt file to managed node
+    #  ansible.builtin.get_url:
+     #   url: ------------
+      #  dest: /root/hostinfo.txt
+
+    - name: Copy txt to all managed node
       ansible.builtin.copy:
         src: hostinfo.txt
         dest: /root/hostinfo.txt
 
-    - name: Collect host name
+    - name: Collect hostname info
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^HOST'
         line: 'HOST={{hostname}}'
-
-    - name: Collect memory size
+    
+    - name: Collect memory info
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^MEM'
         line: 'MEM={{mem_size}}'
-
-    - name: Collect bios version
+    
+    - name: Collect bios version info
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^BIOS'
         line: 'BIOS={{bios_version}}'
-
-    - name: Collect SDA
+    
+    - name: Collect sda info
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^SDA'
         line: 'SDA={{sda_size}}'
-
-    - name: Collect SDB
+    
+    - name: Collect SDB info
       ansible.builtin.lineinfile:
         path: /root/hostinfo.txt
         regexp: '^SDB'
